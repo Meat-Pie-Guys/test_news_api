@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NewsApi.Repositories;
 using NewsApi.Repositories.NewsRepositories;
 using NewsApi.Services.NewsServices;
 
@@ -28,6 +30,9 @@ namespace Api
             services.AddMvc();
             services.AddTransient<INewsRepository, NewsRepository>();
             services.AddTransient<INewsService, NewsService>();
+
+            services.AddDbContext<AppDataContext>(options => 
+                options.UseSqlite("Data Source=../Repositories/DB/NewsDatabase.db", b => b.MigrationsAssembly("Api")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

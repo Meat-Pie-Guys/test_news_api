@@ -4750,6 +4750,9 @@
       "Models/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "System.ComponentModel.Annotations": "4.4.0"
+        },
         "compile": {
           "bin/placeholder/Models.dll": {}
         },
@@ -4761,6 +4764,8 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
+          "Microsoft.EntityFrameworkCore.Design": "2.0.1",
+          "Microsoft.EntityFrameworkCore.Sqlite": "2.0.1",
           "Models": "1.0.0"
         },
         "compile": {
