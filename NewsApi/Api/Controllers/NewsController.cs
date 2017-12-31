@@ -22,7 +22,7 @@ namespace Api.Controllers
         [HttpGet("")]
         public IActionResult GetAllNews()
         {
-            return Ok(_newsService.getNews());
+            return Ok(_newsService.GetNews());
         }
 
         [HttpPost("")]

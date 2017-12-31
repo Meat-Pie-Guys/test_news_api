@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NewsApi.Repositories;
-using NewsApi.Repositories.NewsRepositories;
 using NewsApi.Services.NewsServices;
 
 namespace Api
@@ -28,7 +27,6 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddTransient<INewsRepository, NewsRepository>();
             services.AddTransient<INewsService, NewsService>();
 
             services.AddDbContext<AppDataContext>(options => 

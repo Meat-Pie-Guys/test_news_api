@@ -7,7 +7,7 @@ namespace NewsApi.Services.NewsServices
 {
     public interface INewsService
     {
-        IEnumerable<NewsDTO> getNews();
+        IEnumerable<NewsDTO> GetNews();
         void AddNews(NewsViewModel newNews);
     }
 }
