@@ -1,6 +1,6 @@
 using System;
 
-namespace NewsApi.Utils
+namespace NewsApi.Utils.TimeUtils
 {
     public static class DateBuilder
     {

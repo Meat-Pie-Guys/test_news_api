@@ -7,7 +7,7 @@ using NewsApi.Models.ViewModels;
 using NewsApi.Repositories;
 using NewsApi.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using NewsApi.Utils;
+using NewsApi.Utils.TimeUtils;
 
 namespace NewsApi.Services.NewsServices
 {
