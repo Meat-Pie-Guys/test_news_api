@@ -5,7 +5,7 @@ using NewsApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 
-namespace Tests.MockData
+namespace Tests.MockData.DataContext
 {
     public class InMemoryAppDataContext : AppDataContext
     {

@@ -1,14 +1,15 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NewsApi.Models.DTOModels;
 using NewsApi.Models.EntityModels;
 using NewsApi.Repositories;
 using NewsApi.Services.NewsServices;
+using Microsoft.Data.Sqlite;
 using Xunit;
-using Tests.MockData;
+using Tests.MockData.EntityModels;
+using Tests.MockData.DataContext;
 
 namespace Tests.ServicesTests
 {

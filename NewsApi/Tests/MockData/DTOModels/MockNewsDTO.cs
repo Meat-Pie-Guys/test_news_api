@@ -1,49 +1,49 @@
-using NewsApi.Models.EntityModels;
+using NewsApi.Models.DTOModels;
 using System;
 using System.Collections.Generic;
 
-namespace Tests.MockData
+namespace Tests.MockData.DTOModels
 {
-    public static class MockNews
+    public static class MockNewsDTO
     {
-        private static readonly News[] data = 
+        private static readonly NewsDTO[] data = 
         {
-            new News
+            new NewsDTO
             {
                 Id = 1,
                 Title = "A",
                 ReleaseDate = new DateTime(2015, 4, 3, 12, 44, 39),
                 Content = "_A_"
             },
-            new News
+            new NewsDTO
             {
                 Id = 2,
                 Title = "B",
                 ReleaseDate = new DateTime(2015, 4, 3, 12, 44, 11),
                 Content = "_B_"
             },
-            new News
+            new NewsDTO
             {
                 Id = 3,
                 Title = "C",
                 ReleaseDate = new DateTime(2014, 4, 3, 12, 44, 11),
                 Content = "_C_"
             },
-            new News
+            new NewsDTO
             {
                 Id = 4,
                 Title = "D",
                 ReleaseDate = new DateTime(2015, 4, 3, 10, 11, 0),
                 Content = "_D_"
             },
-            new News
+            new NewsDTO
             {
                 Id = 5,
                 Title = "E",
                 ReleaseDate = new DateTime(2017, 11, 30, 23, 49, 59),
                 Content = "_E_"
             },
-            new News
+            new NewsDTO
             {
                 Id = 6,
                 Title = "F",
@@ -52,12 +52,12 @@ namespace Tests.MockData
             },
         };
 
-        public static IEnumerable<News> GetAll()
+        public static IEnumerable<NewsDTO> GetAll()
         {
             return data;
         }
 
-        public static News GetNews(int index)
+        public static NewsDTO Get(int index)
         {
             if (index < 0 || index >= data.Length) 
             {

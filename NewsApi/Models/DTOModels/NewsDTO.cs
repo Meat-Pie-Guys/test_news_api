@@ -8,10 +8,11 @@ namespace NewsApi.Models.DTOModels
     /// </summary>
     public class NewsDTO
     {
+
         /// <summary>
         /// No argument constructor
         /// </summary>
-        public NewsDTO() {}
+        public NewsDTO() { }
 
         /// <summary>
         /// Converts a entity model of News to it corresponding data transfer object.
