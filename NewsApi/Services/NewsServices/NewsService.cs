@@ -5,6 +5,9 @@ using NewsApi.Models.DTOModels;
 using NewsApi.Models.EntityModels;
 using NewsApi.Models.ViewModels;
 using NewsApi.Repositories;
+using NewsApi.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using NewsApi.Utils;
 
 namespace NewsApi.Services.NewsServices
 {
@@ -17,24 +20,74 @@ namespace NewsApi.Services.NewsServices
             _db = db;
         }
 
-        public IEnumerable<NewsDTO> GetNews()
+        public IEnumerable<NewsDTO> GetAllNews(String year, String month, String day)
+        {
+            if (year == null || month == null || day == null)
+            {
+                return GetAllNewsInTimeOrder();
+            }
+            var date = DateBuilder.CreateDate(year, month, day);
+            return date == null ? new List<NewsDTO>() : GetAllNewsForDayInTimeOrder(date.Value);
+        }
+
+        public IEnumerable<NewsDTO> GetAllNewsInTimeOrder()
         {
             return 
             (
                 from n in _db.News
-                select new NewsDTO
-                {
-                    Id = n.Id,
-                    Title = n.Title,
-                    ReleaseDate = n.ReleaseDate,
-                    Content = n.Content
-                }
+                orderby n.ReleaseDate
+                select new NewsDTO(n)
             ).ToList();
         }
 
-        public void AddNews(NewsViewModel newNews)
+        public IEnumerable<NewsDTO> GetAllNewsForDayInTimeOrder(DateTime date)
         {
-            _db.Add(new News { Title = newNews.Title, ReleaseDate = DateTime.Now, Content = newNews.Content });
+            return
+            (
+                from n in _db.News
+                where n.ReleaseDate.Date == date
+                orderby n.ReleaseDate
+                select new NewsDTO(n)
+            ).ToList();
+        }
+
+        public NewsDTO GetNewsById(int id)
+        {
+            var news = _db.News.SingleOrDefault(x => x.Id == id);
+            if (news == null)
+            {
+                throw new NewsNotFoundException();
+            }
+            return new NewsDTO(news);
+        }
+
+        public int AddNews(AddNewsViewModel newNews)
+        {
+            var news = new News(newNews);
+            _db.Add(news);
+            _db.SaveChanges();
+            return news.Id;
+        }
+
+        public void EditNewsById(EditNewsViewModel changedNews, int id)
+        {
+            var news = _db.News.SingleOrDefault(x => x.Id == id);
+            if (news == null)
+            {
+                throw new NewsNotFoundException();
+            }
+            news.Edit(changedNews);
+            _db.SaveChanges();
+        }
+
+        public void RemoveNewsById(int id)
+        {
+            var news = _db.News.SingleOrDefault(x => x.Id == id);
+            if (news == null)
+            {
+                throw new NewsNotFoundException();
+            }
+            _db.Remove(news);
             _db.SaveChanges();
         }
     }

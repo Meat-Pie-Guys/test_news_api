@@ -14,15 +14,12 @@ namespace Tests.ServicesTests
 {
     public class NewsServicesTest
     {
-        private readonly AppDataContext _context;
         private readonly NewsService _service;
 
         public NewsServicesTest()
         {
-            _context = new AppDataContext(GetInMemoryOptions());
-            _context.Database.OpenConnection();
-            _context.Database.EnsureCreated();
-            PopulateInMemoryDatabase();
+            InMemoryAppDataContext _context = new InMemoryAppDataContext();
+            _context.AddNews(MockNews.GetAll());
             _context.SaveChanges();
             _service = new NewsService(_context);
         }
@@ -31,38 +28,11 @@ namespace Tests.ServicesTests
         public void DemoTest()
         {
             List<NewsDTO> lis = new List<NewsDTO>();
-            foreach (var n in _service.GetNews())
+            foreach (var n in _service.GetAllNewsInTimeOrder())
             {
                 lis.Add(n);
             }
-            Assert.Equal(2, lis.Count);
-        }
-
-        private DbContextOptions<AppDataContext> GetInMemoryOptions()
-        {
-            //Set up for in-memory SQLite database
-            var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = ":memory:" };
-            var connectionString = connectionStringBuilder.ToString();
-            var connection = new SqliteConnection(connectionString);
-        
-            var builder = new DbContextOptionsBuilder<AppDataContext>();
-            builder.UseSqlite(connection);
-            var options = builder.Options;
-            return options;
-        }
-
-        private void PopulateInMemoryDatabase()
-        {
-            PopulateNewsTable();
-            // Add more if needed
-        }
-
-        private void PopulateNewsTable()
-        {
-            foreach (News n in MockNews.GetAll())
-            {
-                _context.Add(n);
-            }
+            Assert.Equal(6, lis.Count);
         }
     }
 }
