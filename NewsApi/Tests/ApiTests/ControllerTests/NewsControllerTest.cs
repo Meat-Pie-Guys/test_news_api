@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using Api.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using NewsApi.Exceptions;
 using NewsApi.Models.DTOModels;
+using NewsApi.Models.ViewModels;
 using Tests.MockData.DTOModels;
 using Tests.MockData.Services;
 using Tests.MockData.ViewModels;
@@ -73,7 +78,7 @@ namespace Tests.ApiTests.ControllerTets
         }
 
         [Fact]
-        public void a()
+        public void AddNews_ValidModel_Created()
         {
             // Arrange
             var service = new MockNewsService { _AddNews = (newNews) => 1 };
@@ -81,9 +86,46 @@ namespace Tests.ApiTests.ControllerTets
 
             // Act
             var result = controller.AddNews(MockAddNewsViewModel.Get(0)) as CreatedAtRouteResult;
-
+            
             // Assert
+            Assert.Equal(201, result.StatusCode);
+            Assert.Equal("GetNewsById", result.RouteName as string);
+            Assert.Single(result.RouteValues.Keys);
+            Assert.True(result.RouteValues.ContainsKey("newsId"));
+            Assert.Equal(1, result.RouteValues.GetValueOrDefault("newsId"));
+        }
 
+        [Fact]
+        public void AddNews_NullModel_BadRequest()
+        {
+            // Arrange
+            var service = new MockNewsService { _AddNews = (newNews) => 1 };
+            var controller = new NewsController(service);
+
+            // Act
+            var result = controller.AddNews(null) as BadRequestResult;
+            
+            // Assert
+            Assert.Equal(400, result.StatusCode);
+        }
+
+        [Fact]
+        public void AddNews_InvalidState_BadRequest()
+        {
+            // Arrange
+            var service = new MockNewsService { _AddNews = (newNews) => 1 };
+            var controller = new NewsController(service);            
+            controller.ModelState.AddModelError("id", "required");
+
+            // Act
+            var result = controller.AddNews(MockAddNewsViewModel.Get(0)) as BadRequestObjectResult;
+            var error = result.Value as SerializableError;
+            
+            // Assert
+            Assert.Equal(400, result.StatusCode);
+            Assert.Single(error.Keys);
+            Assert.True(error.ContainsKey("id"));
+            Assert.Equal("required", error.GetValueOrDefault("id"));
         }
     }
 }

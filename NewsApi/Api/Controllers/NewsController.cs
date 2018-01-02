@@ -69,6 +69,10 @@ namespace Api.Controllers
         /// <returns>201 and get route in header if successful, 400 otherwise</returns>
         public IActionResult AddNews([FromBody] AddNewsViewModel newNews)
         {
+            if (newNews == null)
+            {
+                return BadRequest();
+            }
             if(!ModelState.IsValid) 
             {
                 return BadRequest(ModelState);
@@ -107,6 +111,10 @@ namespace Api.Controllers
         [HttpPut("{newsId:int}")]
         public IActionResult EditNews(int newsId, [FromBody] EditNewsViewModel changedNews)
         {
+            if (changedNews == null)
+            {
+                return BadRequest();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
