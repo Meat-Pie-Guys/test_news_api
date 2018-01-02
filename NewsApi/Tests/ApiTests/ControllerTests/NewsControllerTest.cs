@@ -5,6 +5,7 @@ using NewsApi.Exceptions;
 using NewsApi.Models.DTOModels;
 using Tests.MockData.DTOModels;
 using Tests.MockData.Services;
+using Tests.MockData.ViewModels;
 using Xunit;
 
 namespace Tests.ApiTests.ControllerTets
@@ -45,7 +46,7 @@ namespace Tests.ApiTests.ControllerTets
         }
 
         [Fact]
-        public void a()
+        public void GetAllNews_TwoNewsDTObjects_200()
         {
             // Arrange
             var service = new MockNewsService
@@ -70,8 +71,21 @@ namespace Tests.ApiTests.ControllerTets
             Assert.Contains(MockNewsDTO.Get(0), newsListResult);
             Assert.Contains(MockNewsDTO.Get(3), newsListResult);
         }
+
+        [Fact]
+        public void a()
+        {
+            // Arrange
+            var service = new MockNewsService { _AddNews = (newNews) => 1 };
+            var controller = new NewsController(service);
+
+            // Act
+            var result = controller.AddNews(MockAddNewsViewModel.Get(0)) as CreatedAtRouteResult;
+
+            // Assert
+
+        }
     }
-    
 }
 
 /*
