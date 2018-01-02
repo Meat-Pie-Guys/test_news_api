@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using NewsApi.Models.ViewModels;
 using Tests.TestUtils;
@@ -32,30 +33,93 @@ namespace Tests.ModelTests.ViewModels
         }
 
         [Fact]
-        public void foo()
+        public void AddNewsValidator_BothNull_NotValid()
         {
-            var m1 = new AddNewsViewModel{};
-            var v1 = ModelValidator.ValidateModel(m1);
+            // Arrange
+            var model = new AddNewsViewModel{};
 
-            
-            var m2 = new AddNewsViewModel{Title = "", Content = ""};
-            var v2= ModelValidator.ValidateModel(m2);
+            // Act
+            var validation = ModelValidator.ValidateModel(model);
+            var errorMessagess = validation.Select(x => x.ErrorMessage).ToHashSet();
 
-            
-            var m3 = new AddNewsViewModel{Title = "X"};
-            var v3= ModelValidator.ValidateModel(m3);
+            // Assert
+            Assert.True(validation.Count > 0);
+            Assert.Contains(ErrorMessages.TITLE_REQUIRED, errorMessagess);
+            Assert.Contains(ErrorMessages.CONTENT_REQUIRED, errorMessagess);
+        }
 
-            
-            var m4 = new AddNewsViewModel{ Content = "X"};
-            var v4= ModelValidator.ValidateModel(m4);
+        [Fact]
+        public void AddNewsValidator_BothEmpty_NotValid()
+        {
+            // Arrange
+            var model = new AddNewsViewModel{Title = "", Content = ""};
 
-            
-            var m5 = new AddNewsViewModel{Title = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Content = "B"};
-            var v5= ModelValidator.ValidateModel(m5);
+            // Act
+            var validation = ModelValidator.ValidateModel(model);
+            var errorMessagess = validation.Select(x => x.ErrorMessage).ToHashSet();
 
-            
-            var m6 = new AddNewsViewModel{Title = "A", Content = "B"};
-            var v6= ModelValidator.ValidateModel(m6);
+            // Assert
+            Assert.True(validation.Count > 0);
+            Assert.Contains(ErrorMessages.TITLE_REQUIRED, errorMessagess);
+            Assert.Contains(ErrorMessages.CONTENT_REQUIRED, errorMessagess);
+        }
+
+        [Fact]
+        public void AddNewsValidator_ContentNull_NotValid()
+        {
+            // Arrange
+            var model = new AddNewsViewModel{Title = "X"};
+
+            // Act
+            var validation = ModelValidator.ValidateModel(model);
+            var errorMessagess = validation.Select(x => x.ErrorMessage).ToHashSet();
+
+            // Assert
+            Assert.True(validation.Count > 0);
+            Assert.Contains(ErrorMessages.CONTENT_REQUIRED, errorMessagess);
+        }
+
+        [Fact]
+        public void AddNewsValidator_TitleNull_NotValid()
+        {
+            // Arrange
+            var model = new AddNewsViewModel{ Content = "X"};
+
+            // Act
+            var validation = ModelValidator.ValidateModel(model);
+            var errorMessagess = validation.Select(x => x.ErrorMessage).ToHashSet();
+
+            // Assert
+            Assert.True(validation.Count > 0);
+            Assert.Contains(ErrorMessages.TITLE_REQUIRED, errorMessagess);
+        }
+
+        [Fact]
+        public void AddNewsValidator_TitleTooLong_NotValid()
+        {
+            // Arrange
+            var model = new AddNewsViewModel{Title = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Content = "B"};
+
+            // Act
+            var validation = ModelValidator.ValidateModel(model);
+            var errorMessagess = validation.Select(x => x.ErrorMessage).ToHashSet();
+
+            // Assert
+            Assert.True(validation.Count > 0);
+            Assert.Contains(ErrorMessages.TITLE_TOO_LONG, errorMessagess);
+        }
+
+        [Fact]
+        public void AddNewsValidator_BothValid_Valid()
+        {
+            // Arrange
+            var model = new AddNewsViewModel{Title = "A", Content = "B"};
+
+            // Act
+            var validation = ModelValidator.ValidateModel(model);
+
+            // Assert
+            Assert.Equal(0, validation.Count);
         }
     }
 }

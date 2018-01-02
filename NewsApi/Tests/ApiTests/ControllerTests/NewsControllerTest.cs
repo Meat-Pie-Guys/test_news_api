@@ -114,8 +114,8 @@ namespace Tests.ApiTests.ControllerTets
         {
             // Arrange
             var service = new MockNewsService { _AddNews = (newNews) => 1 };
-            var controller = new NewsController(service);            
-            controller.ModelState.AddModelError("id", "required");
+            var controller = new NewsController(service);
+            controller.ModelState.AddModelError("fake_field", "fake_error_message");
 
             // Act
             var result = controller.AddNews(MockAddNewsViewModel.Get(0)) as BadRequestObjectResult;
@@ -124,14 +124,13 @@ namespace Tests.ApiTests.ControllerTets
             // Assert
             Assert.Equal(400, result.StatusCode);
             Assert.Single(error.Keys);
-            Assert.True(error.ContainsKey("id"));
-            Assert.Equal("required", error.GetValueOrDefault("id"));
+            Assert.True(error.ContainsKey("fake_field"));
+            Assert.Equal(new string[]{"fake_error_message"}, error.GetValueOrDefault("fake_field"));
         }
-    }
-}
 
-/*
-
+        [Fact]
+        public void RemoveNews_NonExisting_NotFound()
+        {
             // Arrange
             var service = new MockNewsService{_RemoveNewsById = (id) => throw new NewsNotFoundException()};
             var controller = new NewsController(service);
@@ -141,5 +140,81 @@ namespace Tests.ApiTests.ControllerTets
             
             // Assert
             Assert.Equal(404, result.StatusCode);
+        }
 
- */
+        [Fact]
+        public void RemoveNews_Existing_NoContent()
+        {
+            // Arrange
+            var service = new MockNewsService{_RemoveNewsById = (id) => {}};
+            var controller = new NewsController(service);
+
+            // Act
+            var result = controller.RemoveNews(5) as NoContentResult;
+            
+            // Assert
+            Assert.Equal(204, result.StatusCode);
+        }
+
+        [Fact]
+        public void EditNews_ValidModel_Ok()
+        {
+            // Arrange
+            var service = new MockNewsService { _EditNewsById = (id, newNews) => {}};
+            var controller = new NewsController(service);
+
+            // Act
+            var result = controller.EditNews(0, MockEditNewsViewModel.Get(0)) as OkResult;
+            
+            // Assert
+            Assert.Equal(200, result.StatusCode);
+        }
+
+        [Fact]
+        public void EditNews_NullModel_BadRequest()
+        {
+            // Arrange
+            var service = new MockNewsService { _EditNewsById = (id, newNews) => {}};
+            var controller = new NewsController(service);
+
+            // Act
+            var result = controller.EditNews(0, null) as BadRequestResult;
+            
+            // Assert
+            Assert.Equal(400, result.StatusCode);
+        }
+
+        [Fact]
+        public void EditNews_InvalidModel_BadRequest()
+        {
+            // Arrange
+            var service = new MockNewsService { _EditNewsById = (id, newNews) => {}};
+            var controller = new NewsController(service);    
+            controller.ModelState.AddModelError("fake_field", "fake_error_message");
+
+            // Act
+            var result = controller.EditNews(3, MockEditNewsViewModel.Get(3)) as BadRequestObjectResult;
+            var error = result.Value as SerializableError;
+            
+            // Assert
+            Assert.Equal(400, result.StatusCode);
+            Assert.Single(error.Keys);
+            Assert.True(error.ContainsKey("fake_field"));
+            Assert.Equal(new string[]{"fake_error_message"}, error.GetValueOrDefault("fake_field"));
+        }
+
+        [Fact]
+        public void EditNews_NonExisting_NotFound()
+        {
+            // Arrange
+            var service = new MockNewsService { _EditNewsById = (id, newNews) => throw new NewsNotFoundException()};
+            var controller = new NewsController(service);
+
+            // Act
+            var result = controller.EditNews(124, MockEditNewsViewModel.Get(0)) as NotFoundResult;
+            
+            // Assert
+            Assert.Equal(404, result.StatusCode);
+        }
+    }
+}
