@@ -38,6 +38,11 @@ namespace Tests.MockData.ViewModels
                 Title = "F",
                 Content = "_F_"
             },
+            new AddNewsViewModel
+            {
+                Title = "G",
+                Content = "_G_"
+            },
         };
 
         public static IEnumerable<AddNewsViewModel> GetAll()
