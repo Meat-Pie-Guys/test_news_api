@@ -5,13 +5,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NewsApi.Repositories;
 using NewsApi.Services.NewsServices;
-using Tests.MockData.ViewModels;
+using Tests.MockData.EntityModels;
 
 namespace Tests.MockData.EndSystems
 {
-public class MockStartUp
+public class StartUp
 {
-        public MockStartUp(IConfiguration configuration)
+        public StartUp(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -33,9 +33,10 @@ public class MockStartUp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                var service = app.ApplicationServices.GetService<INewsService>();
-                service.AddNews(MockAddNewsViewModel.Get(0));
-                service.AddNews(MockAddNewsViewModel.Get(1));
+                var db = app.ApplicationServices.GetService<AppDataContext>();
+                db.Add(MockNews.Get(0));
+                db.Add(MockNews.Get(1));
+                db.SaveChanges();
             }
 
             app.UseMvc();

@@ -16,7 +16,7 @@ namespace Tests.MockData.EndSystems
             var builder = new WebHostBuilder()
                 .UseContentRoot(@"C:\Users\jonst\Desktop\Api\NewsApi")
                 .UseEnvironment("Development")
-                .UseStartup<MockStartUp>()
+                .UseStartup<Tests.MockData.EndSystems.StartUp>()
                 .UseApplicationInsights();
 
 
