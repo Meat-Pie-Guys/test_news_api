@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NewsApi.Models.EntityModels;
 using NewsApi.Repositories;
 using NewsApi.Services.NewsServices;
+using Tests.MockData.DataContext;
 using Tests.MockData.EntityModels;
 
 namespace Tests.MockData.EndSystems

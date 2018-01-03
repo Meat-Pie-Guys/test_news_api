@@ -54,7 +54,12 @@ namespace Tests.MockData.DTOModels
 
         public static IEnumerable<NewsDTO> GetAll()
         {
-            return data;
+            var copyList = new List<NewsDTO>();
+            for (int i = 0; i < data.Length; i++)
+            {
+                copyList.Add(Get(i));
+            }
+            return copyList;
         }
 
         public static NewsDTO Get(int index)
@@ -63,7 +68,13 @@ namespace Tests.MockData.DTOModels
             {
                 throw new ArgumentException("You are accessing test data that does not exist");
             }
-            return data[index];
+            return new NewsDTO
+            {
+                Id = data[index].Id,
+                Title = data[index].Title,
+                ReleaseDate = data[index].ReleaseDate,
+                Content = data[index].Content
+            };
         }
     }
 }

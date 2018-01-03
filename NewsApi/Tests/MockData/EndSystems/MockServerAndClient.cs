@@ -14,7 +14,7 @@ namespace Tests.MockData.EndSystems
         public MockServerAndClient()
         {
             var builder = new WebHostBuilder()
-                .UseContentRoot(@"C:\Users\jonst\Desktop\Api\NewsApi")
+                //.UseContentRoot(@"C:\Users\jonst\Desktop\Api\NewsApi")
                 .UseEnvironment("Development")
                 .UseStartup<Tests.MockData.EndSystems.StartUp>()
                 .UseApplicationInsights();

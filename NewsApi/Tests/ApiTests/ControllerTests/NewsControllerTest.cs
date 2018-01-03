@@ -1,13 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Linq;
 using Api.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using NewsApi.Exceptions;
 using NewsApi.Models.DTOModels;
-using NewsApi.Models.ViewModels;
 using Tests.MockData.DTOModels;
 using Tests.MockData.Services;
 using Tests.MockData.ViewModels;
@@ -32,7 +28,10 @@ namespace Tests.ApiTests.ControllerTets
             
             // Assert
             Assert.Equal(200, result.StatusCode);
-            Assert.Equal(MockNewsDTO.Get(5), newsResult);
+            Assert.Equal(MockNewsDTO.Get(5).Id, newsResult.Id);
+            Assert.Equal(MockNewsDTO.Get(5).Title, newsResult.Title);
+            Assert.Equal(MockNewsDTO.Get(5).Content, newsResult.Content);
+            Assert.Equal(MockNewsDTO.Get(5).ReleaseDate, newsResult.ReleaseDate);
         }
 
 
@@ -69,12 +68,22 @@ namespace Tests.ApiTests.ControllerTets
 
             // Act
             var result = controller.GetAllNews("1", "2", "3") as OkObjectResult;
-            var newsListResult = result.Value as List<NewsDTO>;
+            var newsListResult = (result.Value as List<NewsDTO>);
+            var idSet = newsListResult.Select(x => x.Id).ToHashSet();
+            var titleSet = newsListResult.Select(x => x.Title).ToHashSet();
+            var contentSet = newsListResult.Select(x => x.Content).ToHashSet();
+            var dateSet = newsListResult.Select(x => x.ReleaseDate).ToHashSet();
 
             // Assert
-            Assert.Equal(2, newsListResult.Count);
-            Assert.Contains(MockNewsDTO.Get(0), newsListResult);
-            Assert.Contains(MockNewsDTO.Get(3), newsListResult);
+            Assert.Equal(2, idSet.Count);
+            Assert.Contains(MockNewsDTO.Get(0).Id, idSet);
+            Assert.Contains(MockNewsDTO.Get(0).Title, titleSet);
+            Assert.Contains(MockNewsDTO.Get(0).Content, contentSet);
+            Assert.Contains(MockNewsDTO.Get(0).ReleaseDate, dateSet);
+            Assert.Contains(MockNewsDTO.Get(3).Id, idSet);
+            Assert.Contains(MockNewsDTO.Get(3).Title, titleSet);
+            Assert.Contains(MockNewsDTO.Get(3).Content, contentSet);
+            Assert.Contains(MockNewsDTO.Get(3).ReleaseDate, dateSet);
         }
 
         [Fact]

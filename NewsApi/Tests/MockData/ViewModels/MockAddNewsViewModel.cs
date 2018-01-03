@@ -47,7 +47,12 @@ namespace Tests.MockData.ViewModels
 
         public static IEnumerable<AddNewsViewModel> GetAll()
         {
-            return data;
+            var copyList = new List<AddNewsViewModel>();
+            for (int i = 0; i < data.Length; i++)
+            {
+                copyList.Add(Get(i));
+            }
+            return copyList;
         }
 
         public static AddNewsViewModel Get(int index)
@@ -56,7 +61,11 @@ namespace Tests.MockData.ViewModels
             {
                 throw new ArgumentException("You are accessing test data that does not exist");
             }
-            return data[index];
+            return new AddNewsViewModel
+            {
+                Title = data[index].Title,
+                Content = data[index].Content
+            };
         }
     }
 }
