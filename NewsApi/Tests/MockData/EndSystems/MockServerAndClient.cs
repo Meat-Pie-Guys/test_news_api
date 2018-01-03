@@ -33,11 +33,13 @@ namespace Tests.MockData.EndSystems
 
         public async Task<MockResponse> Post(string route, HttpContent content)
         {
+            content.Headers.ContentType.MediaType = "application/json";
             return await Response(await _client.PostAsync(route, content));
         }
 
         public async Task<MockResponse> Put(string route, HttpContent content)
         {
+            content.Headers.ContentType.MediaType = "application/json";
             return await Response(await _client.PutAsync(route, content));
         }
 

@@ -34,8 +34,8 @@ public class StartUp
             {
                 app.UseDeveloperExceptionPage();
                 var db = app.ApplicationServices.GetService<AppDataContext>();
-                db.Add(MockNews.Get(0));
-                db.Add(MockNews.Get(1));
+                db.Add(MockNews.Get(3));
+                db.Add(MockNews.Get(2));
                 db.SaveChanges();
             }
 
